@@ -1,0 +1,22 @@
+{
+  "name": "packaged/ui",
+  "description": "User Interface",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Brooke Bryan",
+      "email": "brooke@bajb.net"
+    }
+  ],
+  "require": {
+    "php": ">=7.1",
+    "packaged/safehtml": "~1.0"
+  },
+  "require-dev": {
+  },
+  "autoload": {
+    "psr-4": {
+      "Packaged\\Ui\\": "src"
+    }
+  }
+}
