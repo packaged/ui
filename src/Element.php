@@ -13,7 +13,9 @@ class Element implements Renderable, ISafeHtmlProducer
   {
     if($this->_templateFilePath === null)
     {
-      $this->_templateFilePath = substr((new \ReflectionClass(static::class))->getFileName(), 0, -3) . 'phtml';
+      $this->_templateFilePath = realpath(
+        substr((new \ReflectionClass(static::class))->getFileName(), 0, -3) . 'phtml'
+      );
     }
     return $this->_templateFilePath;
   }
@@ -27,10 +29,11 @@ class Element implements Renderable, ISafeHtmlProducer
   public function render(): string
   {
     $tpl = $this->getTemplateFilePath();
-    if(!file_exists($tpl))
+    if(!$tpl)
     {
       throw new \Exception("The template file '$tpl' does not exist", 404);
     }
+
     ob_start();
     try
     {
