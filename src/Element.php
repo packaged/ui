@@ -13,7 +13,7 @@ class Element implements Renderable, ISafeHtmlProducer
   {
     if($this->_templateFilePath === null)
     {
-      $this->_templateFilePath = substr(__FILE__, -3) . 'phtml';
+      $this->_templateFilePath = substr((new \ReflectionClass(static::class))->getFileName(), 0, -3) . 'phtml';
     }
     return $this->_templateFilePath;
   }
@@ -34,7 +34,7 @@ class Element implements Renderable, ISafeHtmlProducer
     ob_start();
     try
     {
-      include $tpl;
+      include($tpl);
     }
     catch(\Exception $e)
     {
