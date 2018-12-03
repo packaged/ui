@@ -1,7 +1,11 @@
 <?php
 namespace Packages\Ui;
 
-class UiElement implements Renderable
+use Exception;
+use Packaged\SafeHtml\ISafeHtmlProducer;
+use Packaged\SafeHtml\SafeHtml;
+
+class Element implements Renderable, ISafeHtmlProducer
 {
   protected $_templateFilePath;
 
@@ -39,4 +43,18 @@ class UiElement implements Renderable
     }
     return ob_get_clean();
   }
+
+  public function produceSafeHTML()
+  {
+    try
+    {
+      $rendered = $this->render();
+      return SafeHtml::escape($rendered);
+    }
+    catch(Exception $e)
+    {
+    }
+    return new SafeHtml($e->getMessage());
+  }
+
 }
