@@ -1,5 +1,5 @@
 <?php
-namespace Packages\Ui;
+namespace Packaged\Ui;
 
 use Exception;
 use Packaged\SafeHtml\ISafeHtmlProducer;

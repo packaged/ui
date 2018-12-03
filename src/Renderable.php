@@ -1,5 +1,5 @@
 <?php
-namespace Packages\Ui;
+namespace Packaged\Ui;
 
 interface Renderable
 {
