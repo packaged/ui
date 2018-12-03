@@ -24,7 +24,7 @@ class Element implements Renderable, ISafeHtmlProducer
    * Build the view response with the relevant template file
    *
    * @return string
-   * @throws \Exception
+   * @throws \Throwable
    */
   public function render(): string
   {
@@ -39,7 +39,7 @@ class Element implements Renderable, ISafeHtmlProducer
     {
       include($tpl);
     }
-    catch(\Exception $e)
+    catch(\Throwable $e)
     {
       ob_end_clean();
       throw $e;
