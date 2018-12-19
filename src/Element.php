@@ -56,8 +56,8 @@ class Element implements Renderable, ISafeHtmlProducer
     }
     catch(Exception $e)
     {
+      return new SafeHtml($e->getMessage());
     }
-    return new SafeHtml($e->getMessage());
   }
 
 }
