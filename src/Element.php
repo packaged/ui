@@ -1,9 +1,9 @@
 <?php
 namespace Packaged\Ui;
 
-use Exception;
 use Packaged\SafeHtml\ISafeHtmlProducer;
 use Packaged\SafeHtml\SafeHtml;
+use Throwable;
 
 class Element implements Renderable, ISafeHtmlProducer
 {
@@ -51,12 +51,11 @@ class Element implements Renderable, ISafeHtmlProducer
   {
     try
     {
-      $rendered = $this->render();
-      return SafeHtml::escape($rendered);
+      return new SafeHtml($this->render());
     }
-    catch(Exception $e)
+    catch(Throwable $e)
     {
-      return new SafeHtml($e->getMessage());
+      return SafeHtml::escape($e->getMessage());
     }
   }
 
