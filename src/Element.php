@@ -59,4 +59,8 @@ class Element implements Renderable, ISafeHtmlProducer
     }
   }
 
+  public function __toString()
+  {
+    return (string)$this->produceSafeHTML();
+  }
 }
