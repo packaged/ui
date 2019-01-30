@@ -47,7 +47,7 @@ class Element implements Renderable, ISafeHtmlProducer
     return ob_get_clean();
   }
 
-  public function produceSafeHTML()
+  public function produceSafeHTML(): SafeHtml
   {
     try
     {
