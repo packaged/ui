@@ -9,7 +9,7 @@ class Element implements Renderable, ISafeHtmlProducer
 {
   protected $_templateFilePath;
 
-  protected function getTemplateFilePath()
+  protected function _getTemplateFilePath()
   {
     if($this->_templateFilePath === null)
     {
@@ -28,7 +28,7 @@ class Element implements Renderable, ISafeHtmlProducer
    */
   public function render(): string
   {
-    $tpl = $this->getTemplateFilePath();
+    $tpl = $this->_getTemplateFilePath();
     if(!$tpl)
     {
       throw new \Exception("The template file '$tpl' does not exist", 404);
