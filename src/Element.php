@@ -1,6 +1,7 @@
 <?php
 namespace Packaged\Ui;
 
+use Composer\Autoload\ClassLoader;
 use Packaged\SafeHtml\ISafeHtmlProducer;
 use Packaged\SafeHtml\SafeHtml;
 use Throwable;
@@ -8,15 +9,68 @@ use Throwable;
 class Element implements Renderable, ISafeHtmlProducer
 {
   protected $_templateFilePath;
+  protected $_classLoader;
+
+  protected function _setClassLoader(ClassLoader $loader)
+  {
+    $this->_classLoader = $loader;
+    return $this;
+  }
+
+  protected function _disableClassLoader()
+  {
+    $this->_classLoader = false;
+    return $this;
+  }
+
+  protected function _getClassLoader()
+  {
+    if($this->_classLoader === null)
+    {
+      //Initialise the classloader to false, to stop multiple calculations
+      $this->_classLoader = false;
+
+      //Look over autoloaders, to see if we have a class loader
+      foreach(spl_autoload_functions() as list($loader))
+      {
+        if($loader instanceof ClassLoader)
+        {
+          $this->_classLoader = $loader;
+          break;
+        }
+      }
+    }
+    return $this->_classLoader;
+  }
+
+  private function _reflectedFilePath()
+  {
+    return (new \ReflectionClass(static::class))->getFileName();
+  }
+
+  protected function _classPathToTemplatePath($classPath)
+  {
+    return realpath(substr($classPath, 0, -3) . 'phtml');
+  }
 
   protected function _getTemplateFilePath()
   {
     if($this->_templateFilePath === null)
     {
-      $this->_templateFilePath = realpath(
-        substr((new \ReflectionClass(static::class))->getFileName(), 0, -3) . 'phtml'
-      );
+      $loader = $this->_getClassLoader();
+      if($loader instanceof ClassLoader)
+      {
+        //Use the classLoader to find the path for our file
+        $filePath = $loader->findFile(static::class);
+        $this->_templateFilePath = $this->_classPathToTemplatePath($filePath ?: $this->_reflectedFilePath());
+      }
+      else
+      {
+        //If we dont hace a classLoader, use reflection to get the class path
+        $this->_templateFilePath = $this->_classPathToTemplatePath($this->_reflectedFilePath());
+      }
     }
+
     return $this->_templateFilePath;
   }
 
@@ -37,7 +91,7 @@ class Element implements Renderable, ISafeHtmlProducer
     ob_start();
     try
     {
-      include($tpl);
+      include $tpl;
     }
     catch(\Throwable $e)
     {
