@@ -10,10 +10,18 @@ class Element implements Renderable, ISafeHtmlProducer
 {
   protected $_templateFilePath;
   protected $_classLoader;
+  /**
+   * @var ClassLoader
+   */
+  private static $globalClassLoader;
 
-  protected function _setClassLoader(ClassLoader $loader)
+  protected function _setClassLoader(ClassLoader $loader, bool $global = true)
   {
     $this->_classLoader = $loader;
+    if($global)
+    {
+      self::$globalClassLoader = $loader;
+    }
     return $this;
   }
 
@@ -27,16 +35,23 @@ class Element implements Renderable, ISafeHtmlProducer
   {
     if($this->_classLoader === null)
     {
-      //Initialise the classloader to false, to stop multiple calculations
-      $this->_classLoader = false;
-
-      //Look over autoloaders, to see if we have a class loader
-      foreach(spl_autoload_functions() as list($loader))
+      if(self::$globalClassLoader !== null)
       {
-        if($loader instanceof ClassLoader)
+        $this->_classLoader = self::$globalClassLoader;
+      }
+      else
+      {
+        //Initialise the classloader to false, to stop multiple calculations
+        $this->_classLoader = false;
+
+        //Look over autoloaders, to see if we have a class loader
+        foreach(spl_autoload_functions() as list($loader))
         {
-          $this->_classLoader = $loader;
-          break;
+          if($loader instanceof ClassLoader)
+          {
+            $this->_setClassLoader($loader, true);
+            break;
+          }
         }
       }
     }
