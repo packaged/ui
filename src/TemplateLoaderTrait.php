@@ -57,7 +57,7 @@ trait TemplateLoaderTrait
 
   private function _reflectedFilePath()
   {
-    return (new \ReflectionClass(static::class))->getFileName();
+    return (new \ReflectionClass($this->_getTemplatedPhtmlClass()))->getFileName();
   }
 
   protected function _classPathToTemplatePath($classPath)
@@ -73,7 +73,7 @@ trait TemplateLoaderTrait
       if($loader instanceof ClassLoader)
       {
         //Use the classLoader to find the path for our file
-        $filePath = $loader->findFile(static::class);
+        $filePath = $loader->findFile($this->_getTemplatedPhtmlClass());
         $this->_templateFilePath = $this->_classPathToTemplatePath($filePath ?: $this->_reflectedFilePath());
       }
       else
@@ -111,5 +111,10 @@ trait TemplateLoaderTrait
       throw $e;
     }
     return ob_get_clean();
+  }
+
+  protected function _getTemplatedPhtmlClass()
+  {
+    return static::class;
   }
 }
