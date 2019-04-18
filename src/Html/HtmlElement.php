@@ -2,7 +2,6 @@
 namespace Packaged\Ui\Html;
 
 use Packaged\Helpers\Arrays;
-use Packaged\Helpers\ValueAs;
 use Packaged\SafeHtml\ISafeHtmlProducer;
 use Packaged\SafeHtml\SafeHtml;
 use Packaged\Ui\Renderable;
@@ -143,32 +142,21 @@ abstract class HtmlElement implements Renderable, ISafeHtmlProducer
   }
 
   /**
-   * @param string|array $class
+   * @param string ...$class
    *
    * @return $this
    */
-  public function addClass($class)
+  public function addClass(...$class)
   {
-    $classes = func_num_args() === 1 ? ValueAs::arr($class) : func_get_args();
-
-    foreach($classes as $class)
+    foreach($class as $c)
     {
-      if(is_array($class))
-      {
-        foreach($class as $c)
-        {
-          $this->_addClass($c);
-        }
-      }
-      else
-      {
-        $this->_addClass($class);
-      }
+      $this->_addClass($c);
     }
+
     return $this;
   }
 
-  private function _addClass($class)
+  private function _addClass(string $class)
   {
     if(!isset($this->_attributes['class']))
     {
@@ -183,38 +171,26 @@ abstract class HtmlElement implements Renderable, ISafeHtmlProducer
    *
    * @return bool
    */
-  public function hasClass($class)
+  public function hasClass(string $class)
   {
     return isset($this->_attributes['class'][$class]);
   }
 
   /**
-   * @param string|array $class
+   * @param string ...$class
    *
    * @return $this
    */
-  public function removeClass($class)
+  public function removeClass(...$class)
   {
-    $classes = func_num_args() === 1 ? ValueAs::arr($class) : func_get_args();
-
-    foreach($classes as $class)
+    foreach($class as $c)
     {
-      if(is_array($class))
-      {
-        foreach($class as $c)
-        {
-          $this->_removeClass($c);
-        }
-      }
-      else
-      {
-        $this->_removeClass($class);
-      }
+      $this->_removeClass($c);
     }
     return $this;
   }
 
-  private function _removeClass($class)
+  private function _removeClass(string $class)
   {
     unset($this->_attributes['class'][$class]);
     return $this;
