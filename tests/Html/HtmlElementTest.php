@@ -167,6 +167,15 @@ class HtmlElementTest extends TestCase
     $this->assertEquals('<div flag1 flag2></div>', $ele->produceSafeHTML()->getContent());
   }
 
+  public function testAttributes()
+  {
+    $ele = new TestHtmlElement('div');
+    $ele->setAttribute('flag1', null, true);
+    $ele->setAttribute('flag2', '', true);
+    $ele->setAttribute('flag3', true);
+    $this->assertEquals('<div flag3></div>', $ele->produceSafeHTML()->getContent());
+  }
+
   public function testContentOnly()
   {
     $ele = new TestHtmlElement('span');

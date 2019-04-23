@@ -97,13 +97,13 @@ abstract class HtmlElement implements Renderable, ISafeHtmlProducer
    */
   public function setOrRemoveAttribute(string $key, $value)
   {
-    if(!empty($value))
+    if($value === null || $value === '')
     {
-      $this->setAttribute($key, $value);
+      $this->removeAttribute($key);
     }
     else
     {
-      $this->removeAttribute($key);
+      $this->setAttribute($key, $value);
     }
     return $this;
   }
@@ -112,10 +112,17 @@ abstract class HtmlElement implements Renderable, ISafeHtmlProducer
    * @param string $key
    * @param string $value
    *
+   * @param bool   $ignoreEmpty Do not set attributes where the value is empty string or null
+   *
    * @return $this
    */
-  public function setAttribute(string $key, $value)
+  public function setAttribute(string $key, $value, $ignoreEmpty = false)
   {
+    if($ignoreEmpty && ($value === '' || $value === null))
+    {
+      return $this;
+    }
+
     $this->_attributes[$key] = $value;
     return $this;
   }
