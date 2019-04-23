@@ -44,14 +44,14 @@ class HtmlElementTest extends TestCase
     $tag->removeClass('red');
     $this->assertFalse($tag->hasClass('red'));
 
-    $tag->addClass('red', 'blue', ['green', 'yellow'], 'orange');
+    $tag->addClass('red', 'blue', 'green', 'yellow', 'orange');
     $this->assertTrue($tag->hasClass('yellow'));
     $this->assertTrue($tag->hasClass('blue'));
     $this->assertTrue($tag->hasClass('green'));
     $this->assertTrue($tag->hasClass('red'));
     $this->assertTrue($tag->hasClass('orange'));
 
-    $tag->removeClass('yellow', ['blue', 'green'], 'red');
+    $tag->removeClass('yellow', 'blue', 'green', 'red');
     $this->assertFalse($tag->hasClass('yellow'));
     $this->assertFalse($tag->hasClass('blue'));
     $this->assertFalse($tag->hasClass('green'));
@@ -165,6 +165,17 @@ class HtmlElementTest extends TestCase
     $ele->setAttribute('flag1', null);
     $ele->setAttribute('flag2', true);
     $this->assertEquals('<div flag1 flag2></div>', $ele->produceSafeHTML()->getContent());
+  }
+
+  public function testContentOnly()
+  {
+    $ele = new TestHtmlElement('span');
+    $ele->setContent("Hello");
+    $this->assertEquals('<span>Hello</span>', $ele->produceSafeHTML()->getContent());
+
+    $ele = new TestHtmlElement('');
+    $ele->setContent("Hello");
+    $this->assertEquals('Hello', $ele->produceSafeHTML()->getContent());
   }
 
   public function testToStringException()

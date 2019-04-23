@@ -219,6 +219,7 @@ abstract class HtmlElement implements Renderable, ISafeHtmlProducer
   public function produceSafeHTML(): SafeHtml
   {
     $ele = $this->_prepareForProduce();
+    $tag = $ele->getTag();
 
     // If the `href` attribute is present:
     //   - make sure it is not a "javascript:" URI. We never permit these.
@@ -304,9 +305,9 @@ abstract class HtmlElement implements Renderable, ISafeHtmlProducer
     $content = $ele->_getContentForRender();
     if(empty($content))
     {
-      if(isset($selfClosingTags[$ele->_tag]))
+      if(isset($selfClosingTags[$tag]))
       {
-        return new SafeHtml('<' . $ele->_tag . $attrString . ' />');
+        return new SafeHtml('<' . $tag . $attrString . ' />');
       }
       $content = '';
     }
@@ -315,7 +316,7 @@ abstract class HtmlElement implements Renderable, ISafeHtmlProducer
       $content = SafeHtml::escape($content, '');
     }
 
-    return new SafeHtml('<' . $ele->_tag . $attrString . '>' . $content . '</' . $ele->_tag . '>');
+    return new SafeHtml($tag ? ('<' . $tag . $attrString . '>' . $content . '</' . $tag . '>') : $content);
   }
 
   protected function _getContentForRender()
