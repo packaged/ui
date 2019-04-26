@@ -9,13 +9,9 @@ class Element implements Renderable, ISafeHtmlProducer
 {
   use TemplateLoaderTrait;
 
-  /**
-   * @return string
-   * @throws Throwable
-   */
-  public function render(): string
+  public function __toString()
   {
-    return $this->_renderTemplate();
+    return (string)$this->produceSafeHTML();
   }
 
   public function produceSafeHTML(): SafeHtml
@@ -30,8 +26,12 @@ class Element implements Renderable, ISafeHtmlProducer
     }
   }
 
-  public function __toString()
+  /**
+   * @return string
+   * @throws Throwable
+   */
+  public function render(): string
   {
-    return (string)$this->produceSafeHTML();
+    return $this->_renderTemplate();
   }
 }

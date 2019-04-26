@@ -5,19 +5,17 @@ use Packaged\Helpers\Arrays;
 use Packaged\SafeHtml\ISafeHtmlProducer;
 use Packaged\SafeHtml\SafeHtml;
 use Packaged\Ui\Renderable;
+use function array_key_exists;
+use function error_log;
+use function is_scalar;
+use function preg_match;
+use function preg_replace;
+use const ENT_QUOTES;
 
 abstract class HtmlElement implements Renderable, ISafeHtmlProducer
 {
   protected $_tag;
   protected $_attributes = [];
-
-  /**
-   * @return string
-   */
-  public function getTag()
-  {
-    return $this->_tag;
-  }
 
   /**
    * @param string $id
@@ -27,66 +25,6 @@ abstract class HtmlElement implements Renderable, ISafeHtmlProducer
   public function setId($id)
   {
     return $this->setOrRemoveAttribute('id', $id);
-  }
-
-  /**
-   * @return string
-   */
-  public function getId()
-  {
-    return $this->getAttribute('id');
-  }
-
-  /**
-   * Array of attributes for the tag
-   *
-   * @param array $attributes
-   *
-   * @return $this
-   */
-  public function setAttributes(array $attributes)
-  {
-    $this->_attributes = $attributes;
-    return $this;
-  }
-
-  /**
-   * Array of attributes for the tag
-   *
-   * @param array $attributes
-   * @param bool  $overwriteIfExists
-   *
-   * @return $this
-   */
-  public function addAttributes(array $attributes, bool $overwriteIfExists = false)
-  {
-    foreach($attributes as $k => $v)
-    {
-      if($overwriteIfExists || !array_key_exists($k, $this->_attributes))
-      {
-        $this->setOrRemoveAttribute($k, $v);
-      }
-    }
-    return $this;
-  }
-
-  /**
-   * @param string $key
-   *
-   * @return $this
-   */
-  public function removeAttribute(string $key)
-  {
-    unset($this->_attributes[$key]);
-    return $this;
-  }
-
-  /**
-   * @return array
-   */
-  public function getAttributes()
-  {
-    return $this->_attributes;
   }
 
   /**
@@ -110,6 +48,17 @@ abstract class HtmlElement implements Renderable, ISafeHtmlProducer
 
   /**
    * @param string $key
+   *
+   * @return $this
+   */
+  public function removeAttribute(string $key)
+  {
+    unset($this->_attributes[$key]);
+    return $this;
+  }
+
+  /**
+   * @param string $key
    * @param string $value
    *
    * @param bool   $ignoreEmpty Do not set attributes where the value is empty string or null
@@ -128,6 +77,14 @@ abstract class HtmlElement implements Renderable, ISafeHtmlProducer
   }
 
   /**
+   * @return string
+   */
+  public function getId()
+  {
+    return $this->getAttribute('id');
+  }
+
+  /**
    * @param string $key
    * @param string $default
    *
@@ -136,6 +93,47 @@ abstract class HtmlElement implements Renderable, ISafeHtmlProducer
   public function getAttribute(string $key, $default = null)
   {
     return Arrays::value($this->_attributes, $key, $default);
+  }
+
+  /**
+   * Array of attributes for the tag
+   *
+   * @param array $attributes
+   * @param bool  $overwriteIfExists
+   *
+   * @return $this
+   */
+  public function addAttributes(array $attributes, bool $overwriteIfExists = false)
+  {
+    foreach($attributes as $k => $v)
+    {
+      if($overwriteIfExists || !array_key_exists($k, $this->_attributes))
+      {
+        $this->setOrRemoveAttribute($k, $v);
+      }
+    }
+    return $this;
+  }
+
+  /**
+   * @return array
+   */
+  public function getAttributes()
+  {
+    return $this->_attributes;
+  }
+
+  /**
+   * Array of attributes for the tag
+   *
+   * @param array $attributes
+   *
+   * @return $this
+   */
+  public function setAttributes(array $attributes)
+  {
+    $this->_attributes = $attributes;
+    return $this;
   }
 
   /**
@@ -213,10 +211,26 @@ abstract class HtmlElement implements Renderable, ISafeHtmlProducer
     return (array)Arrays::value($this->_attributes, 'class', []);
   }
 
-  protected function _prepareForProduce(): HtmlElement
+  public function __toString()
   {
-    //Make any changes to the tag just before generating html output
-    return $this;
+    try
+    {
+      return $this->render();
+    }
+    catch(\Exception $e)
+    {
+      error_log(
+        ($e->getCode() > 0 ? '[' . $e->getCode() . '] ' : '')
+        . $e->getMessage()
+        . ' (' . $e->getFile() . ':' . $e->getLine() . ')'
+      );
+      return $e->getMessage();
+    }
+  }
+
+  public function render(): string
+  {
+    return (string)$this->produceSafeHTML();
   }
 
   /**
@@ -330,31 +344,23 @@ abstract class HtmlElement implements Renderable, ISafeHtmlProducer
     return new SafeHtml($tag ? ('<' . $tag . $attrString . '>' . $content . '</' . $tag . '>') : $content);
   }
 
+  protected function _prepareForProduce(): HtmlElement
+  {
+    //Make any changes to the tag just before generating html output
+    return $this;
+  }
+
+  /**
+   * @return string
+   */
+  public function getTag()
+  {
+    return $this->_tag;
+  }
+
   protected function _getContentForRender()
   {
     return null;
-  }
-
-  public function __toString()
-  {
-    try
-    {
-      return $this->render();
-    }
-    catch(\Exception $e)
-    {
-      error_log(
-        ($e->getCode() > 0 ? '[' . $e->getCode() . '] ' : '')
-        . $e->getMessage()
-        . ' (' . $e->getFile() . ':' . $e->getLine() . ')'
-      );
-      return $e->getMessage();
-    }
-  }
-
-  public function render(): string
-  {
-    return (string)$this->produceSafeHTML();
   }
 
 }

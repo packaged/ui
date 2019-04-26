@@ -4,6 +4,14 @@ namespace Packaged\Ui\Html;
 use Packaged\Helpers\Arrays;
 use Packaged\Helpers\ValueAs;
 use Packaged\SafeHtml\SafeHtml;
+use function http_build_query;
+use function ltrim;
+use function parse_str;
+use function parse_url;
+use function preg_match;
+use function rawurldecode;
+use function strlen;
+use function substr;
 
 /**
  * Basic URI parser object.
@@ -131,6 +139,32 @@ class Uri
     return $prefix . $this->getPath() . $query . $fragment;
   }
 
+  public function getFragment()
+  {
+    return $this->fragment;
+  }
+
+  public function setFragment($fragment)
+  {
+    $this->fragment = $fragment;
+    return $this;
+  }
+
+  public function getPath()
+  {
+    return $this->path;
+  }
+
+  public function setPath($path)
+  {
+    if($this->domain && strlen($path) && $path[0] !== '/')
+    {
+      $path = '/' . $path;
+    }
+    $this->path = $path;
+    return $this;
+  }
+
   public function setQueryParam($key, $value)
   {
     if($value === null)
@@ -155,20 +189,14 @@ class Uri
     return $this->query;
   }
 
-  public function setProtocol($protocol)
-  {
-    $this->protocol = $protocol;
-    return $this;
-  }
-
   public function getProtocol()
   {
     return $this->protocol;
   }
 
-  public function setDomain($domain)
+  public function setProtocol($protocol)
   {
-    $this->domain = $domain;
+    $this->protocol = $protocol;
     return $this;
   }
 
@@ -177,9 +205,9 @@ class Uri
     return $this->domain;
   }
 
-  public function setPort($port)
+  public function setDomain($domain)
   {
-    $this->port = $port;
+    $this->domain = $domain;
     return $this;
   }
 
@@ -188,13 +216,9 @@ class Uri
     return $this->port;
   }
 
-  public function setPath($path)
+  public function setPort($port)
   {
-    if($this->domain && strlen($path) && $path[0] !== '/')
-    {
-      $path = '/' . $path;
-    }
-    $this->path = $path;
+    $this->port = $port;
     return $this;
   }
 
@@ -220,20 +244,9 @@ class Uri
     return $this;
   }
 
-  public function getPath()
+  public function getUser()
   {
-    return $this->path;
-  }
-
-  public function setFragment($fragment)
-  {
-    $this->fragment = $fragment;
-    return $this;
-  }
-
-  public function getFragment()
-  {
-    return $this->fragment;
+    return $this->user;
   }
 
   public function setUser($user)
@@ -242,19 +255,14 @@ class Uri
     return $this;
   }
 
-  public function getUser()
+  public function getPass()
   {
-    return $this->user;
+    return $this->pass;
   }
 
   public function setPass($pass)
   {
     $this->pass = $pass;
     return $this;
-  }
-
-  public function getPass()
-  {
-    return $this->pass;
   }
 }
