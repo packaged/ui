@@ -196,7 +196,17 @@ trait HtmlAttributesTrait
   {
     foreach($class as $c)
     {
-      $this->_removeClass($c);
+      if(is_array($c))
+      {
+        foreach($c as $cc)
+        {
+          $this->_removeClass($cc);
+        }
+      }
+      else
+      {
+        $this->_removeClass($c);
+      }
     }
     return $this;
   }
