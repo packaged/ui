@@ -146,7 +146,17 @@ trait HtmlAttributesTrait
   {
     foreach($class as $c)
     {
-      $this->_addClass($c);
+      if(is_array($c))
+      {
+        foreach($c as $cc)
+        {
+          $this->_addClass($cc);
+        }
+      }
+      else
+      {
+        $this->_addClass($c);
+      }
     }
 
     return $this;

@@ -44,7 +44,7 @@ class HtmlElementTest extends TestCase
     $tag->removeClass('red');
     $this->assertFalse($tag->hasClass('red'));
 
-    $tag->addClass('red', 'blue', 'green', 'yellow', 'orange');
+    $tag->addClass('red', 'blue', ['green', 'yellow'], 'orange');
     $this->assertTrue($tag->hasClass('yellow'));
     $this->assertTrue($tag->hasClass('blue'));
     $this->assertTrue($tag->hasClass('green'));
