@@ -2,6 +2,7 @@
 namespace Packaged\Ui;
 
 use Composer\Autoload\ClassLoader;
+use function file_exists;
 use function ob_end_clean;
 use function ob_get_clean;
 use function ob_start;
@@ -55,17 +56,21 @@ trait TemplateLoaderTrait
   {
     if($this->_templateFilePath === null)
     {
+      $filePath = null;
       $loader = $this->_getClassLoader();
-      if($loader instanceof ClassLoader)
+      $useCl = $loader instanceof ClassLoader;
+      foreach($this->_getTemplatedPhtmlClassList() as $class)
       {
-        //Use the classLoader to find the path for our file
-        $filePath = $loader->findFile($this->_getTemplatedPhtmlClass());
-        $this->_templateFilePath = $this->_classPathToTemplatePath($filePath ?: $this->_reflectedFilePath());
-      }
-      else
-      {
-        //If we dont hace a classLoader, use reflection to get the class path
-        $this->_templateFilePath = $this->_classPathToTemplatePath($this->_reflectedFilePath());
+        if($useCl)
+        {
+          $filePath = $loader->findFile($class);
+        }
+        $attempt = $this->_classPathToTemplatePath($useCl && $filePath ? $filePath : $this->_reflectedFilePath($class));
+        if(file_exists($attempt))
+        {
+          $this->_templateFilePath = $attempt;
+          break;
+        }
       }
     }
 
@@ -114,13 +119,18 @@ trait TemplateLoaderTrait
     return static::class;
   }
 
+  protected function _getTemplatedPhtmlClassList()
+  {
+    return [$this->_getTemplatedPhtmlClass()];
+  }
+
   protected function _classPathToTemplatePath($classPath)
   {
     return realpath(substr($classPath, 0, -3) . 'phtml');
   }
 
-  private function _reflectedFilePath()
+  private function _reflectedFilePath($class)
   {
-    return (new \ReflectionClass($this->_getTemplatedPhtmlClass()))->getFileName();
+    return (new \ReflectionClass($class))->getFileName();
   }
 }
