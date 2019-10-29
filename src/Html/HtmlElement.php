@@ -70,8 +70,7 @@ abstract class HtmlElement implements Renderable, ISafeHtmlProducer
 
         // This function is deep in the core and performance sensitive, so we're
         // doing a cheap version of this test first to avoid calling preg_match()
-        // on URIs which begin with '/' or `#`. These cover essentially all URIs
-        // in Phabricator.
+        // on URIs which begin with '/' or `#`.
         if(!$isAnchorHref && !$isDomainHref)
         {
           // Chrome 33 and IE 11 both interpret "javascript\n:" as a Javascript
