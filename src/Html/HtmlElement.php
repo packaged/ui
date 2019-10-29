@@ -8,13 +8,34 @@ use function error_log;
 use function is_scalar;
 use function preg_match;
 use function preg_replace;
-use const ENT_QUOTES;
 
 abstract class HtmlElement implements Renderable, ISafeHtmlProducer
 {
   use HtmlAttributesTrait;
 
   protected $_tag;
+
+  // For tags which can't self-close, treat null as the empty string -- for
+  // example, always render `<div></div>`, never `<div />`.
+  protected static $_selfClosing = [
+    'area'    => true,
+    'base'    => true,
+    'br'      => true,
+    'col'     => true,
+    'command' => true,
+    'embed'   => true,
+    'frame'   => true,
+    'hr'      => true,
+    'img'     => true,
+    'input'   => true,
+    'keygen'  => true,
+    'link'    => true,
+    'meta'    => true,
+    'param'   => true,
+    'source'  => true,
+    'track'   => true,
+    'wbr'     => true,
+  ];
 
   public function __toString()
   {
@@ -47,6 +68,26 @@ abstract class HtmlElement implements Renderable, ISafeHtmlProducer
     $ele = $this->_prepareForProduce();
     $tag = $ele->getTag();
 
+    $attrString = $this->_generateAttributesString($ele);
+    $content = $ele->_getContentForRender();
+    if(empty($content))
+    {
+      if(isset(self::$_selfClosing[$tag]))
+      {
+        return new SafeHtml('<' . $tag . $attrString . ' />');
+      }
+      $content = '';
+    }
+    else
+    {
+      $content = SafeHtml::escape($content, '');
+    }
+
+    return new SafeHtml($tag ? ('<' . $tag . $attrString . '>' . $content . '</' . $tag . '>') : $content);
+  }
+
+  protected function _generateAttributesString(HtmlElement $ele)
+  {
     // If the `href` attribute is present:
     //   - make sure it is not a "javascript:" URI. We never permit these.
     //   - if the tag is an `<a>` and the link is to some foreign resource,
@@ -82,37 +123,13 @@ abstract class HtmlElement implements Renderable, ISafeHtmlProducer
           if(preg_match('/^javascript:/i', $normalizedHref))
           {
             throw new \Exception(
-              "Attempting to render a tag with an 'href' attribute that " .
-              "begins with 'javascript:'. This is either a serious security " .
-              "concern or a serious architecture concern. Seek urgent " .
-              "remedy."
+              "Attempting to render a tag with an 'href' attribute that begins with 'javascript:'. " .
+              "This is either a serious security concern or a serious architecture concern. Seek urgent remedy."
             );
           }
         }
       }
     }
-
-    // For tags which can't self-close, treat null as the empty string -- for
-    // example, always render `<div></div>`, never `<div />`.
-    $selfClosingTags = [
-      'area'    => true,
-      'base'    => true,
-      'br'      => true,
-      'col'     => true,
-      'command' => true,
-      'embed'   => true,
-      'frame'   => true,
-      'hr'      => true,
-      'img'     => true,
-      'input'   => true,
-      'keygen'  => true,
-      'link'    => true,
-      'meta'    => true,
-      'param'   => true,
-      'source'  => true,
-      'track'   => true,
-      'wbr'     => true,
-    ];
 
     $attrString = '';
     foreach($ele->_attributes as $k => $v)
@@ -130,22 +147,7 @@ abstract class HtmlElement implements Renderable, ISafeHtmlProducer
         $attrString .= ' ' . $k . '="' . SafeHtml::escape($v) . '"';
       }
     }
-
-    $content = $ele->_getContentForRender();
-    if(empty($content))
-    {
-      if(isset($selfClosingTags[$tag]))
-      {
-        return new SafeHtml('<' . $tag . $attrString . ' />');
-      }
-      $content = '';
-    }
-    else
-    {
-      $content = SafeHtml::escape($content, '');
-    }
-
-    return new SafeHtml($tag ? ('<' . $tag . $attrString . '>' . $content . '</' . $tag . '>') : $content);
+    return $attrString;
   }
 
   protected function _prepareForProduce(): HtmlElement
