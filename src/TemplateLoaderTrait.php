@@ -65,11 +65,14 @@ trait TemplateLoaderTrait
         {
           $filePath = $loader->findFile($class);
         }
-        $attempt = $this->_classPathToTemplatePath($useCl && $filePath ? $filePath : $this->_reflectedFilePath($class));
-        if(file_exists($attempt))
+        $classPath = $useCl && $filePath ? $filePath : $this->_reflectedFilePath($class);
+        foreach((array)$this->_classPathToTemplatePath($classPath) as $attempt)
         {
-          $this->_templateFilePath = $attempt;
-          break;
+          if(file_exists($attempt))
+          {
+            $this->_templateFilePath = $attempt;
+            return $this->_templateFilePath;
+          }
         }
       }
     }
@@ -124,9 +127,19 @@ trait TemplateLoaderTrait
     return [$this->_getTemplatedPhtmlClass()];
   }
 
+  protected function _attemptTemplateExtensions()
+  {
+    return ['phtml'];
+  }
+
   protected function _classPathToTemplatePath($classPath)
   {
-    return realpath(substr($classPath, 0, -3) . 'phtml');
+    $return = [];
+    foreach($this->_attemptTemplateExtensions() as $ext)
+    {
+      $return[] = realpath(substr($classPath, 0, -3) . $ext);
+    }
+    return $return;
   }
 
   private function _reflectedFilePath($class)

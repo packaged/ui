@@ -15,4 +15,26 @@ class TemplatedHtmlElementTest extends TestCase
       new TestTemplatedHtmlElement()
     );
   }
+
+  public function testTemplatedDe()
+  {
+    $ele = new TestTemplatedHtmlElement();
+    $ele->extensions = ['de.phtml', 'phtml'];
+    $this->assertEquals(
+      '<div><strong>Das ist stark</strong>
+</div>',
+      $ele
+    );
+  }
+
+  public function testTemplatedFr()
+  {
+    $ele = new TestTemplatedHtmlElement();
+    $ele->extensions = ['fr.phtml', 'phtml'];
+    $this->assertEquals(
+      '<div><strong>This is strong</strong>
+</div>',
+      $ele
+    );
+  }
 }
