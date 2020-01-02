@@ -11,58 +11,75 @@ class HtmlElementTest extends TestCase
   public function testGettersAndSetters()
   {
     $tag = new TestHtmlElement();
-    $this->assertEquals('div', $tag->getTag());
+    self::assertEquals('div', $tag->getTag());
 
     $tag->setId('myid');
-    $this->assertEquals('myid', $tag->getId());
+    self::assertEquals('myid', $tag->getId());
 
     $tag->setId('');
-    $this->assertEquals(null, $tag->getId());
+    self::assertEquals(null, $tag->getId());
 
-    $this->assertFalse($tag->hasAttribute('random'));
-    $this->assertEquals('no', $tag->getAttribute('random', 'no'));
+    self::assertFalse($tag->hasAttribute('random'));
+    self::assertEquals('no', $tag->getAttribute('random', 'no'));
     $tag->setAttribute('random', 'test');
-    $this->assertTrue($tag->hasAttribute('random'));
-    $this->assertEquals('test', $tag->getAttribute('random'));
+    self::assertTrue($tag->hasAttribute('random'));
+    self::assertEquals('test', $tag->getAttribute('random'));
 
     $attr = ['test' => 'ran', 'class' => 'test', 'id' => 'four'];
     $tag->setAttributes($attr);
-    $this->assertSame($attr, $tag->getAttributes());
-    $this->assertEquals('four', $tag->getId());
+    self::assertSame($attr, $tag->getAttributes());
+    self::assertEquals('four', $tag->getId());
 
     $tag->addAttributes(['test' => 'no'], false);
-    $this->assertEquals('ran', $tag->getAttribute('test'));
+    self::assertEquals('ran', $tag->getAttribute('test'));
 
     $tag->addAttributes(['test' => 'yes'], true);
-    $this->assertEquals('yes', $tag->getAttribute('test'));
+    self::assertEquals('yes', $tag->getAttribute('test'));
 
     $tag->removeAttribute('class');
-    $this->assertFalse($tag->hasClass('red'));
+    self::assertFalse($tag->hasClass('red'));
     $tag->addClass('red');
-    $this->assertTrue($tag->hasClass('red'));
-    $this->assertEquals(['red' => 'red'], $tag->getClasses());
+    self::assertTrue($tag->hasClass('red'));
+    self::assertEquals(['red' => 'red'], $tag->getClasses());
     $tag->removeClass('red');
-    $this->assertFalse($tag->hasClass('red'));
+    self::assertFalse($tag->hasClass('red'));
 
     $tag->addClass('red', 'blue', ['green', 'yellow'], 'orange');
-    $this->assertTrue($tag->hasClass('yellow'));
-    $this->assertTrue($tag->hasClass('blue'));
-    $this->assertTrue($tag->hasClass('green'));
-    $this->assertTrue($tag->hasClass('red'));
-    $this->assertTrue($tag->hasClass('orange'));
+    self::assertTrue($tag->hasClass('yellow'));
+    self::assertTrue($tag->hasClass('blue'));
+    self::assertTrue($tag->hasClass('green'));
+    self::assertTrue($tag->hasClass('red'));
+    self::assertTrue($tag->hasClass('orange'));
 
     $tag->removeClass('yellow', ['blue', 'green'], 'red');
-    $this->assertFalse($tag->hasClass('yellow'));
-    $this->assertFalse($tag->hasClass('blue'));
-    $this->assertFalse($tag->hasClass('green'));
-    $this->assertFalse($tag->hasClass('red'));
-    $this->assertTrue($tag->hasClass('orange'));
+    self::assertFalse($tag->hasClass('yellow'));
+    self::assertFalse($tag->hasClass('blue'));
+    self::assertFalse($tag->hasClass('green'));
+    self::assertFalse($tag->hasClass('red'));
+    self::assertTrue($tag->hasClass('orange'));
+
+    $tag->removeClass('toggled');
+    self::assertFalse($tag->hasClass('toggled'));
+    $tag->toggleClass('toggled');
+    self::assertTrue($tag->hasClass('toggled'));
+    $tag->toggleClass('toggled');
+    self::assertFalse($tag->hasClass('toggled'));
+    $tag->toggleClass('toggled', false);
+    self::assertFalse($tag->hasClass('toggled'));
+    $tag->toggleClass('toggled');
+    self::assertTrue($tag->hasClass('toggled'));
+    $tag->toggleClass('toggled', true);
+    self::assertTrue($tag->hasClass('toggled'));
+    $tag->toggleClass('toggled', true);
+    self::assertTrue($tag->hasClass('toggled'));
+    $tag->toggleClass('toggled', false);
+    self::assertFalse($tag->hasClass('toggled'));
   }
 
   public function testSelfClosers()
   {
-    $this->assertEquals('<br />', (string)new TestHtmlElement('br'));
-    $this->assertEquals(
+    self::assertEquals('<br />', (string)new TestHtmlElement('br'));
+    self::assertEquals(
       '<img src="x.gif" />',
       (string)(new TestHtmlElement('img'))->setAttributes(['src' => 'x.gif'])
     );
@@ -70,19 +87,19 @@ class HtmlElementTest extends TestCase
 
   public function testNullContent()
   {
-    $this->assertEquals('<div></div>', (string)new TestHtmlElement());
+    self::assertEquals('<div></div>', (string)new TestHtmlElement());
   }
 
   public function testContent()
   {
-    $this->assertEquals('<div>Hello</div>', (string)(new TestHtmlElement())->setContent('Hello'));
-    $this->assertEquals('<div>&amp;</div>', (string)(new TestHtmlElement())->setContent('&'));
-    $this->assertEquals('<div>&</div>', (string)(new TestHtmlElement())->setContent(new SafeHtml('&')));
+    self::assertEquals('<div>Hello</div>', (string)(new TestHtmlElement())->setContent('Hello'));
+    self::assertEquals('<div>&amp;</div>', (string)(new TestHtmlElement())->setContent('&'));
+    self::assertEquals('<div>&</div>', (string)(new TestHtmlElement())->setContent(new SafeHtml('&')));
   }
 
   public function testBooleanAttribute()
   {
-    $this->assertEquals(
+    self::assertEquals(
       '<option selected></option>',
       (string)(new TestHtmlElement('option'))->setAttributes(['selected' => null])
     );
@@ -150,7 +167,7 @@ class HtmlElementTest extends TestCase
         {
           $caught = $ex;
         }
-        $this->assertEquals(
+        self::assertEquals(
           $expect,
           $caught instanceof \Exception,
           "Rejected href: {$href}"
@@ -164,7 +181,7 @@ class HtmlElementTest extends TestCase
     $ele = new TestHtmlElement('div');
     $ele->setAttribute('flag1', null);
     $ele->setAttribute('flag2', true);
-    $this->assertEquals('<div flag1 flag2></div>', $ele->produceSafeHTML()->getContent());
+    self::assertEquals('<div flag1 flag2></div>', $ele->produceSafeHTML()->getContent());
   }
 
   public function testAttributes()
@@ -173,23 +190,23 @@ class HtmlElementTest extends TestCase
     $ele->setAttribute('flag1', null, true);
     $ele->setAttribute('flag2', '', true);
     $ele->setAttribute('flag3', true);
-    $this->assertEquals('<div flag3></div>', $ele->produceSafeHTML()->getContent());
+    self::assertEquals('<div flag3></div>', $ele->produceSafeHTML()->getContent());
   }
 
   public function testContentOnly()
   {
     $ele = new TestHtmlElement('span');
     $ele->setContent("Hello");
-    $this->assertEquals('<span>Hello</span>', $ele->produceSafeHTML()->getContent());
+    self::assertEquals('<span>Hello</span>', $ele->produceSafeHTML()->getContent());
 
     $ele = new TestHtmlElement('');
     $ele->setContent("Hello");
-    $this->assertEquals('Hello', $ele->produceSafeHTML()->getContent());
+    self::assertEquals('Hello', $ele->produceSafeHTML()->getContent());
   }
 
   public function testToStringException()
   {
     $tag = (new TestHtmlElement('a'))->setAttributes(['href' => 'javascript:alert(\'Hi\');']);
-    $this->assertContains('Attempting to render a tag with an', (string)$tag);
+    self::assertContains('Attempting to render a tag with an', (string)$tag);
   }
 }

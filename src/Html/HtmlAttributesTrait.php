@@ -212,6 +212,23 @@ trait HtmlAttributesTrait
   }
 
   /**
+   * Toggle a class to the desired state, or the opposite of the current state
+   *
+   * @param           $class
+   * @param bool|null $toggle
+   *
+   * @return $this
+   */
+  public function toggleClass($class, bool $toggle = null)
+  {
+    if($toggle === true || ($toggle === null && !$this->hasClass($class)))
+    {
+      return $this->addClass($class);
+    }
+    return $this->removeClass($class);
+  }
+
+  /**
    * @param string $class
    *
    * @return $this
