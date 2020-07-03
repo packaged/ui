@@ -5,7 +5,6 @@ use Packaged\SafeHtml\ISafeHtmlProducer;
 use Packaged\SafeHtml\SafeHtml;
 use Packaged\Ui\Renderable;
 use function error_log;
-use function is_scalar;
 use function preg_match;
 use function preg_replace;
 
@@ -138,9 +137,13 @@ abstract class HtmlElement implements Renderable, ISafeHtmlProducer
       {
         $attrString .= ' ' . $k;
       }
-      else if(is_scalar($v))
+      else if(is_string($v))
       {
         $attrString .= ' ' . $k . '="' . \htmlspecialchars($v, ENT_QUOTES, 'UTF-8') . '"';
+      }
+      else if(is_numeric($v))
+      {
+        $attrString .= ' ' . $k . '="' . $v . '"';
       }
       else
       {

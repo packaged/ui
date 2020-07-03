@@ -188,9 +188,23 @@ class HtmlElementTest extends TestCase
   {
     $ele = new TestHtmlElement('div');
     $ele->setAttribute('flag1', null, true);
-    $ele->setAttribute('flag2', '', true);
-    $ele->setAttribute('flag3', true);
-    self::assertEquals('<div flag3></div>', $ele->produceSafeHTML()->getContent());
+    self::assertEquals('<div></div>', $ele->produceSafeHTML()->getContent());
+
+    $ele = new TestHtmlElement('div');
+    $ele->setAttribute('flag2', '', false);
+    self::assertEquals('<div flag2=""></div>', $ele->produceSafeHTML()->getContent());
+
+    $ele = new TestHtmlElement('div');
+    $ele->setAttribute('flag3', '', true);
+    self::assertEquals('<div></div>', $ele->produceSafeHTML()->getContent());
+
+    $ele = new TestHtmlElement('div');
+    $ele->setAttribute('flag4', true);
+    self::assertEquals('<div flag4></div>', $ele->produceSafeHTML()->getContent());
+
+    $ele = new TestHtmlElement('div');
+    $ele->setAttribute('flag5', 1234);
+    self::assertEquals('<div flag5="1234"></div>', $ele->produceSafeHTML()->getContent());
   }
 
   public function testContentOnly()
