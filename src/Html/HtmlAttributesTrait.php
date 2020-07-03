@@ -146,16 +146,16 @@ trait HtmlAttributesTrait
   {
     foreach($class as $c)
     {
-      if(is_array($c))
+      if(is_string($c))
+      {
+        $this->_addClass($c);
+      }
+      else if(is_iterable($c))
       {
         foreach($c as $cc)
         {
           $this->_addClass($cc);
         }
-      }
-      else
-      {
-        $this->_addClass($c);
       }
     }
 
@@ -196,16 +196,16 @@ trait HtmlAttributesTrait
   {
     foreach($class as $c)
     {
-      if(is_array($c))
+      if(is_string($c))
+      {
+        $this->_removeClass($c);
+      }
+      else if(is_iterable($c))
       {
         foreach($c as $cc)
         {
           $this->_removeClass($cc);
         }
-      }
-      else
-      {
-        $this->_removeClass($c);
       }
     }
     return $this;
