@@ -223,4 +223,19 @@ class HtmlElementTest extends TestCase
     $tag = (new TestHtmlElement('a'))->setAttributes(['href' => 'javascript:alert(\'Hi\');']);
     self::assertContains('Attempting to render a tag with an', (string)$tag);
   }
+
+  public function testEmpty()
+  {
+    $ele = new TestHtmlElement('');
+    $ele->setContent(null);
+    self::assertEquals('', $ele->produceSafeHTML()->getContent());
+
+    $ele = new TestHtmlElement('');
+    $ele->setContent('');
+    self::assertEquals('', $ele->produceSafeHTML()->getContent());
+
+    $ele = new TestHtmlElement('');
+    $ele->setContent(0);
+    self::assertEquals('0', $ele->produceSafeHTML()->getContent());
+  }
 }

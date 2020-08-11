@@ -69,7 +69,7 @@ abstract class HtmlElement implements Renderable, ISafeHtmlProducer
 
     $attrString = $this->_generateAttributesString($ele);
     $content = $ele->_getContentForRender();
-    if(empty($content))
+    if($content === null || $content === '')
     {
       if(isset(self::$_selfClosing[$tag]))
       {
