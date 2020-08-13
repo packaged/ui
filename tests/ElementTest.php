@@ -1,6 +1,7 @@
 <?php
 namespace Packaged\Ui\Tests;
 
+use Packaged\Ui\Tests\Supporting\ExceptionElement;
 use Packaged\Ui\Tests\Supporting\TestElement;
 use PHPUnit\Framework\TestCase;
 
@@ -15,5 +16,11 @@ class ElementTest extends TestCase
       $this->assertStringStartsWith('<b>Hello</b>', (string)$ele);
       $this->assertStringStartsWith('<b>Hello</b>', (string)$ele->produceSafeHTML());
     }
+  }
+
+  public function testException()
+  {
+    $ele = new ExceptionElement();
+    $this->assertEquals('No template file found for `ExceptionElement`', $ele->produceSafeHTML());
   }
 }

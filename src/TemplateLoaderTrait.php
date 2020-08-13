@@ -2,6 +2,9 @@
 namespace Packaged\Ui;
 
 use Composer\Autoload\ClassLoader;
+use Exception;
+use Packaged\Helpers\Objects;
+use Packaged\Helpers\Path;
 use function file_exists;
 use function ob_end_clean;
 use function ob_get_clean;
@@ -36,7 +39,7 @@ trait TemplateLoaderTrait
     $templatePath = $this->_getTemplateFilePath();
     if(!$templatePath)
     {
-      throw new \Exception("The template file '$templatePath' does not exist", 404);
+      throw new Exception('No template file found for `' . Objects::classShortname($this) . '`', 404);
     }
 
     ob_start();
@@ -47,7 +50,11 @@ trait TemplateLoaderTrait
     catch(\Throwable $e)
     {
       ob_end_clean();
-      throw new \Exception("Error in template '$templatePath'. " . $e->getMessage(), $e->getCode(), $e);
+      throw new $e(
+        $e->getMessage() . ' (' . Path::baseName($templatePath) . ':' . $e->getLine() . ')',
+        $e->getCode(),
+        $e
+      );
     }
     return ob_get_clean();
   }
@@ -135,9 +142,11 @@ trait TemplateLoaderTrait
   protected function _classPathToTemplatePath($classPath)
   {
     $return = [];
+    $classPath = realpath($classPath);
+    $stripExt = substr($classPath, 0, -3);
     foreach($this->_attemptTemplateExtensions() as $ext)
     {
-      $return[] = realpath(substr($classPath, 0, -3) . $ext);
+      $return[] = $stripExt . $ext;
     }
     return $return;
   }
