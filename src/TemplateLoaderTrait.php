@@ -47,7 +47,7 @@ trait TemplateLoaderTrait
     catch(\Throwable $e)
     {
       ob_end_clean();
-      throw $e;
+      throw new \Exception("Error in template '$templatePath'. " . $e->getMessage(), $e->getCode(), $e);
     }
     return ob_get_clean();
   }
@@ -94,7 +94,7 @@ trait TemplateLoaderTrait
         $this->_classLoader = false;
 
         //Look over autoloaders, to see if we have a class loader
-        foreach(spl_autoload_functions() as list($loader))
+        foreach(spl_autoload_functions() as [$loader])
         {
           if($loader instanceof ClassLoader)
           {
