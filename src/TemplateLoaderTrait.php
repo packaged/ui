@@ -50,7 +50,9 @@ trait TemplateLoaderTrait
     catch(\ErrorException $e)
     {
       ob_end_clean();
-      throw $e;
+      throw new $e(
+        $e->getMessage(), $e->getCode(), $e->getSeverity(), Path::baseName($templatePath), $e->getLine(), $e
+      );
     }
     catch(\Exception $e)
     {
