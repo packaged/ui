@@ -47,10 +47,24 @@ trait TemplateLoaderTrait
     {
       include $templatePath;
     }
-    catch(\Throwable $e)
+    catch(\ErrorException $e)
+    {
+      ob_end_clean();
+      throw $e;
+    }
+    catch(\Exception $e)
     {
       ob_end_clean();
       throw new $e(
+        $e->getMessage() . ' (' . Path::baseName($templatePath) . ':' . $e->getLine() . ')',
+        $e->getCode(),
+        $e
+      );
+    }
+    catch(\Throwable $e)
+    {
+      ob_end_clean();
+      throw new \RuntimeException(
         $e->getMessage() . ' (' . Path::baseName($templatePath) . ':' . $e->getLine() . ')',
         $e->getCode(),
         $e
