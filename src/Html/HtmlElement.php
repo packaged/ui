@@ -58,6 +58,8 @@ abstract class HtmlElement implements Renderable, ISafeHtmlProducer
     return (string)$this->produceSafeHTML();
   }
 
+  private const emptyArr = [];
+
   /**
    * @return SafeHtml
    * @throws \Exception
@@ -69,7 +71,7 @@ abstract class HtmlElement implements Renderable, ISafeHtmlProducer
 
     $attrString = $this->_generateAttributesString($ele);
     $content = $ele->_getContentForRender();
-    if($content === null || $content === '')
+    if($content === null || $content === '' || $content === self::emptyArr)
     {
       if(isset(self::$_selfClosing[$tag]))
       {

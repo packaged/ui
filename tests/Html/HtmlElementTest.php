@@ -79,6 +79,7 @@ class HtmlElementTest extends TestCase
   public function testSelfClosers()
   {
     self::assertEquals('<br />', (string)new TestHtmlElement('br'));
+    self::assertEquals('<br />', (string)(new TestHtmlElement('br'))->setContent([]));
     self::assertEquals(
       '<img src="x.gif" />',
       (string)(new TestHtmlElement('img'))->setAttributes(['src' => 'x.gif'])
@@ -92,6 +93,9 @@ class HtmlElementTest extends TestCase
 
   public function testContent()
   {
+    self::assertEquals('<p>0</p>', (string)(new TestHtmlElement('p'))->setContent(0));
+    self::assertEquals('<p>0</p>', (string)(new TestHtmlElement('p'))->setContent('0'));
+
     self::assertEquals('<div>Hello</div>', (string)(new TestHtmlElement())->setContent('Hello'));
     self::assertEquals('<div>&amp;</div>', (string)(new TestHtmlElement())->setContent('&'));
     self::assertEquals('<div>&</div>', (string)(new TestHtmlElement())->setContent(new SafeHtml('&')));
