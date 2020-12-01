@@ -225,7 +225,7 @@ class HtmlElementTest extends TestCase
   public function testToStringException()
   {
     $tag = (new TestHtmlElement('a'))->setAttributes(['href' => 'javascript:alert(\'Hi\');']);
-    self::assertContains('Attempting to render a tag with an', (string)$tag);
+    self::assertStringContainsString('Attempting to render a tag with an', (string)$tag);
   }
 
   public function testEmpty()
