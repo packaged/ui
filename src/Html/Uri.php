@@ -3,7 +3,6 @@ namespace Packaged\Ui\Html;
 
 use Packaged\Helpers\Arrays;
 use Packaged\Helpers\ValueAs;
-use Packaged\SafeHtml\SafeHtml;
 use Packaged\SafeHtml\SafeHtmlEscape;
 use function http_build_query;
 use function ltrim;
