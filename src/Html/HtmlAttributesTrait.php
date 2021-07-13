@@ -1,5 +1,4 @@
 <?php
-/** @noinspection PhpMissingReturnTypeInspection */
 namespace Packaged\Ui\Html;
 
 use Packaged\Helpers\Arrays;
