@@ -90,9 +90,11 @@ abstract class HtmlElement implements Renderable, ISafeHtmlProducer
   }
 
   /**
+   * @return string
+   *
    * @throws Exception
    */
-  protected function _generateAttributesString(HtmlElement $ele): string
+  protected function _generateAttributesString(HtmlElement $ele)
   {
     // If the `href` attribute is present:
     //   - make sure it is not a "javascript:" URI. We never permit these.
@@ -166,7 +168,10 @@ abstract class HtmlElement implements Renderable, ISafeHtmlProducer
     return $this;
   }
 
-  public function getTag(): string
+  /**
+   * @return string
+   */
+  public function getTag()
   {
     return $this->_tag;
   }
