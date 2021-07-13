@@ -90,6 +90,23 @@ class HtmlElementTest extends TestCase
     );
   }
 
+  public function testClasses()
+  {
+    $tag = new TestHtmlElement();
+
+    $tag->addClass('aa');
+    self::assertEquals(['aa'], $tag->getClasses());
+    self::assertEquals('aa', $tag->getAttribute('class'));
+
+    $tag->setAttribute('class', 'xx yy');
+    self::assertEquals(['xx', 'yy'], $tag->getClasses());
+    self::assertEquals('xx yy', $tag->getAttribute('class'));
+
+    $tag->addClass('zz');
+    self::assertEquals(['xx', 'yy', 'zz'], $tag->getClasses());
+    self::assertEquals('xx yy zz', $tag->getAttribute('class'));
+  }
+
   public function testNullContent()
   {
     self::assertEquals('<div></div>', (string)new TestHtmlElement());
