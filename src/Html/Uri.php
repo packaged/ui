@@ -86,7 +86,7 @@ class Uri
     $this->setFragment(Arrays::value($parts, 'fragment', ''));
   }
 
-  public function __toString()
+  public function __toString(): string
   {
     $prefix = null;
     if($this->protocol || $this->domain || $this->port)
@@ -96,8 +96,8 @@ class Uri
       $auth = '';
       if(strlen($this->user) && strlen($this->pass))
       {
-        $auth = SafeHtml::escapeUri($this->user) . ':' .
-          SafeHtml::escapeUri($this->pass) . '@';
+        /** @noinspection PhpUndefinedMethodInspection */
+        $auth = SafeHtml::escapeUri($this->user) . ':' . SafeHtml::escapeUri($this->pass) . '@';
       }
       else if(strlen($this->user))
       {
@@ -139,22 +139,28 @@ class Uri
     return $prefix . $this->getPath() . $query . $fragment;
   }
 
-  public function getFragment()
+  public function getFragment(): string
   {
     return $this->fragment;
   }
 
+  /**
+   * @return $this
+   */
   public function setFragment($fragment)
   {
     $this->fragment = $fragment;
     return $this;
   }
 
-  public function getPath()
+  public function getPath(): string
   {
     return $this->path;
   }
 
+  /**
+   * @return $this
+   */
   public function setPath($path)
   {
     if($this->domain && strlen($path) && $path[0] !== '/')
@@ -165,6 +171,9 @@ class Uri
     return $this;
   }
 
+  /**
+   * @return $this
+   */
   public function setQueryParam($key, $value)
   {
     if($value === null)
@@ -178,51 +187,66 @@ class Uri
     return $this;
   }
 
+  /**
+   * @return $this
+   */
   public function setQueryParams(array $params)
   {
     $this->query = $params;
     return $this;
   }
 
-  public function getQueryParams()
+  public function getQueryParams(): array
   {
     return $this->query;
   }
 
-  public function getProtocol()
+  public function getProtocol(): string
   {
     return $this->protocol;
   }
 
+  /**
+   * @return $this
+   */
   public function setProtocol($protocol)
   {
     $this->protocol = $protocol;
     return $this;
   }
 
-  public function getDomain()
+  public function getDomain(): string
   {
     return $this->domain;
   }
 
+  /**
+   * @return $this
+   */
   public function setDomain($domain)
   {
     $this->domain = $domain;
     return $this;
   }
 
-  public function getPort()
+  public function getPort(): string
   {
     return $this->port;
   }
 
+  /**
+   * @return $this
+   */
   public function setPort($port)
   {
     $this->port = $port;
     return $this;
   }
 
-  public function appendPath($path)
+  /**
+   * @return $this
+   */
+  public function appendPath(string $path)
   {
     $first = strlen($path) ? $path[0] : null;
     $last = strlen($this->path) ? $this->path[strlen($this->path) - 1] : null;
@@ -244,23 +268,29 @@ class Uri
     return $this;
   }
 
-  public function getUser()
+  public function getUser(): string
   {
     return $this->user;
   }
 
-  public function setUser($user)
+  /**
+   * @return $this
+   */
+  public function setUser(string $user)
   {
     $this->user = $user;
     return $this;
   }
 
-  public function getPass()
+  public function getPass(): string
   {
     return $this->pass;
   }
 
-  public function setPass($pass)
+  /**
+   * @return $this
+   */
+  public function setPass(string $pass)
   {
     $this->pass = $pass;
     return $this;

@@ -2,9 +2,14 @@
 namespace Packaged\Ui;
 
 use Composer\Autoload\ClassLoader;
+use ErrorException;
 use Exception;
 use Packaged\Helpers\Objects;
 use Packaged\Helpers\Path;
+use ReflectionClass;
+use ReflectionException;
+use RuntimeException;
+use Throwable;
 use function file_exists;
 use function ob_end_clean;
 use function ob_get_clean;
@@ -32,7 +37,7 @@ trait TemplateLoaderTrait
    * Build the view response with the relevant template file
    *
    * @return string
-   * @throws \Throwable
+   * @throws Throwable
    */
   protected function _renderTemplate(): string
   {
@@ -47,14 +52,14 @@ trait TemplateLoaderTrait
     {
       include $templatePath;
     }
-    catch(\ErrorException $e)
+    catch(ErrorException $e)
     {
       ob_end_clean();
       throw new $e(
         $e->getMessage(), $e->getCode(), $e->getSeverity(), Path::baseName($templatePath), $e->getLine(), $e
       );
     }
-    catch(\Exception $e)
+    catch(Exception $e)
     {
       ob_end_clean();
       throw new $e(
@@ -63,10 +68,10 @@ trait TemplateLoaderTrait
         $e
       );
     }
-    catch(\Throwable $e)
+    catch(Throwable $e)
     {
       ob_end_clean();
-      throw new \RuntimeException(
+      throw new RuntimeException(
         $e->getMessage() . ' (' . Path::baseName($templatePath) . ':' . $e->getLine() . ')',
         $e->getCode(),
         $e
@@ -130,6 +135,9 @@ trait TemplateLoaderTrait
     return $this->_classLoader;
   }
 
+  /**
+   * @return $this
+   */
   protected function _setClassLoader(ClassLoader $loader, bool $global = true)
   {
     $this->_classLoader = $loader;
@@ -140,22 +148,22 @@ trait TemplateLoaderTrait
     return $this;
   }
 
-  protected function _getTemplatedPhtmlClass()
+  protected function _getTemplatedPhtmlClass(): string
   {
     return static::class;
   }
 
-  protected function _getTemplatedPhtmlClassList()
+  protected function _getTemplatedPhtmlClassList(): array
   {
     return [$this->_getTemplatedPhtmlClass()];
   }
 
-  protected function _attemptTemplateExtensions()
+  protected function _attemptTemplateExtensions(): array
   {
     return ['phtml'];
   }
 
-  protected function _classPathToTemplatePath($classPath)
+  protected function _classPathToTemplatePath($classPath): array
   {
     $return = [];
     $classPath = realpath($classPath);
@@ -167,8 +175,11 @@ trait TemplateLoaderTrait
     return $return;
   }
 
-  private function _reflectedFilePath($class)
+  /**
+   * @throws ReflectionException
+   */
+  private function _reflectedFilePath($class): ?string
   {
-    return (new \ReflectionClass($class))->getFileName();
+    return (new ReflectionClass($class))->getFileName();
   }
 }

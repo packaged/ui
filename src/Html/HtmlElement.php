@@ -1,10 +1,12 @@
 <?php
 namespace Packaged\Ui\Html;
 
+use Exception;
 use Packaged\SafeHtml\ISafeHtmlProducer;
 use Packaged\SafeHtml\SafeHtml;
 use Packaged\Ui\Renderable;
 use function error_log;
+use function htmlspecialchars;
 use function preg_match;
 use function preg_replace;
 
@@ -42,7 +44,7 @@ abstract class HtmlElement implements Renderable, ISafeHtmlProducer
     {
       return $this->render();
     }
-    catch(\Exception $e)
+    catch(Exception $e)
     {
       error_log(
         ($e->getCode() > 0 ? '[' . $e->getCode() . '] ' : '')
@@ -62,7 +64,7 @@ abstract class HtmlElement implements Renderable, ISafeHtmlProducer
 
   /**
    * @return SafeHtml
-   * @throws \Exception
+   * @throws Exception
    */
   public function produceSafeHTML(): SafeHtml
   {
@@ -87,7 +89,10 @@ abstract class HtmlElement implements Renderable, ISafeHtmlProducer
     return new SafeHtml($tag ? ('<' . $tag . $attrString . '>' . $content . '</' . $tag . '>') : $content);
   }
 
-  protected function _generateAttributesString(HtmlElement $ele)
+  /**
+   * @throws Exception
+   */
+  protected function _generateAttributesString(HtmlElement $ele): string
   {
     // If the `href` attribute is present:
     //   - make sure it is not a "javascript:" URI. We never permit these.
@@ -123,7 +128,7 @@ abstract class HtmlElement implements Renderable, ISafeHtmlProducer
           $normalizedHref = preg_replace('([^a-z0-9/:]+)i', '', $href);
           if(preg_match('/^javascript:/i', $normalizedHref))
           {
-            throw new \Exception(
+            throw new Exception(
               "Attempting to render a tag with an 'href' attribute that begins with 'javascript:'. " .
               "This is either a serious security concern or a serious architecture concern. Seek urgent remedy."
             );
@@ -141,7 +146,7 @@ abstract class HtmlElement implements Renderable, ISafeHtmlProducer
       }
       else if(is_string($v))
       {
-        $attrString .= ' ' . $k . '="' . \htmlspecialchars($v, ENT_QUOTES, 'UTF-8') . '"';
+        $attrString .= ' ' . $k . '="' . htmlspecialchars($v, ENT_QUOTES, 'UTF-8') . '"';
       }
       else if(is_numeric($v))
       {
@@ -161,10 +166,7 @@ abstract class HtmlElement implements Renderable, ISafeHtmlProducer
     return $this;
   }
 
-  /**
-   * @return string
-   */
-  public function getTag()
+  public function getTag(): string
   {
     return $this->_tag;
   }
@@ -173,5 +175,4 @@ abstract class HtmlElement implements Renderable, ISafeHtmlProducer
   {
     return null;
   }
-
 }
