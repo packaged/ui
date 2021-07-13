@@ -101,6 +101,7 @@ class Uri
       }
       else if(strlen($this->user))
       {
+        /** @noinspection PhpUndefinedMethodInspection */
         $auth = SafeHtml::escapeUri($this->user) . '@';
       }
 
