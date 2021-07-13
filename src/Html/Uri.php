@@ -86,7 +86,10 @@ class Uri
     $this->setFragment(Arrays::value($parts, 'fragment', ''));
   }
 
-  public function __toString(): string
+  /**
+   * @return string
+   */
+  public function __toString()
   {
     $prefix = null;
     if($this->protocol || $this->domain || $this->port)
@@ -140,7 +143,10 @@ class Uri
     return $prefix . $this->getPath() . $query . $fragment;
   }
 
-  public function getFragment(): string
+  /**
+   * @return string
+   */
+  public function getFragment()
   {
     return $this->fragment;
   }
@@ -154,7 +160,10 @@ class Uri
     return $this;
   }
 
-  public function getPath(): string
+  /**
+   * @return string
+   */
+  public function getPath()
   {
     return $this->path;
   }
@@ -197,12 +206,18 @@ class Uri
     return $this;
   }
 
-  public function getQueryParams(): array
+  /**
+   * @return array
+   */
+  public function getQueryParams()
   {
     return $this->query;
   }
 
-  public function getProtocol(): string
+  /**
+   * @return string
+   */
+  public function getProtocol()
   {
     return $this->protocol;
   }
@@ -216,7 +231,10 @@ class Uri
     return $this;
   }
 
-  public function getDomain(): string
+  /**
+   * @return string
+   */
+  public function getDomain()
   {
     return $this->domain;
   }
@@ -230,7 +248,10 @@ class Uri
     return $this;
   }
 
-  public function getPort(): string
+  /**
+   * @return string
+   */
+  public function getPort()
   {
     return $this->port;
   }
@@ -269,7 +290,10 @@ class Uri
     return $this;
   }
 
-  public function getUser(): string
+  /**
+   * @return string
+   */
+  public function getUser()
   {
     return $this->user;
   }
@@ -283,7 +307,10 @@ class Uri
     return $this;
   }
 
-  public function getPass(): string
+  /**
+   * @return string
+   */
+  public function getPass()
   {
     return $this->pass;
   }
