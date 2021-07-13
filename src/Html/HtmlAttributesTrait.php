@@ -47,7 +47,7 @@ trait HtmlAttributesTrait
    *
    * @return $this
    */
-  public function setAttribute(string $key, string $value, bool $ignoreEmpty = false)
+  public function setAttribute(string $key, $value, bool $ignoreEmpty = false)
   {
     if($ignoreEmpty && ($value === '' || $value === null))
     {
@@ -58,12 +58,12 @@ trait HtmlAttributesTrait
     return $this;
   }
 
-  public function getId(): string
+  public function getId(): ?string
   {
     return $this->getAttribute('id');
   }
 
-  public function getAttribute(string $key, $default = null): string
+  public function getAttribute(string $key, $default = null): ?string
   {
     $attr = Arrays::value($this->_attributes, $key, $default);
 

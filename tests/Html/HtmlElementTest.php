@@ -40,7 +40,7 @@ class HtmlElementTest extends TestCase
     self::assertFalse($tag->hasClass('red'));
     $tag->addClass('red');
     self::assertTrue($tag->hasClass('red'));
-    self::assertEquals(['red' => 'red'], $tag->getClasses());
+    self::assertEquals([0 => 'red'], $tag->getClasses());
     $tag->removeClass('red');
     self::assertFalse($tag->hasClass('red'));
 
@@ -76,6 +76,10 @@ class HtmlElementTest extends TestCase
     self::assertFalse($tag->hasClass('toggled'));
   }
 
+  /**
+   * @noinspection HtmlUnknownTarget
+   * @noinspection HtmlRequiredAltAttribute
+   */
   public function testSelfClosers()
   {
     self::assertEquals('<br />', (string)new TestHtmlElement('br'));
@@ -165,7 +169,7 @@ class HtmlElementTest extends TestCase
         $caught = null;
         try
         {
-          (new TestHtmlElement('a'))->setAttributes(['href' => $href], 'go')->produceSafeHTML();
+          (new TestHtmlElement('a'))->setAttributes(['href' => $href])->produceSafeHTML();
         }
         catch(\Exception $ex)
         {
