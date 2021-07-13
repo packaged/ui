@@ -220,7 +220,7 @@ trait HtmlAttributesTrait
    *
    * @return $this
    */
-  public function toggleClass(string $class, bool $toggle = null)
+  public function toggleClass($class, bool $toggle = null)
   {
     if($toggle === true || ($toggle === null && !$this->hasClass($class)))
     {
