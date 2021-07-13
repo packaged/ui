@@ -41,7 +41,7 @@ class HtmlElementTest extends TestCase
     self::assertFalse($tag->hasClass('red'));
     $tag->addClass('red');
     self::assertTrue($tag->hasClass('red'));
-    self::assertEquals([0 => 'red'], $tag->getClasses());
+    self::assertEquals(['red'], $tag->getClasses());
     $tag->removeClass('red');
     self::assertFalse($tag->hasClass('red'));
 
