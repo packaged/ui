@@ -20,7 +20,7 @@ trait HtmlAttributesTrait
 
   /**
    * @param string $key
-   * @param string $value
+   * @param        $value
    *
    * @return $this
    */
@@ -50,8 +50,7 @@ trait HtmlAttributesTrait
 
   /**
    * @param string $key
-   * @param string $value
-   *
+   * @param        $value
    * @param bool   $ignoreEmpty Do not set attributes where the value is empty string or null
    *
    * @return $this
@@ -68,7 +67,7 @@ trait HtmlAttributesTrait
   }
 
   /**
-   * @return string
+   * @return string|null
    */
   public function getId()
   {
@@ -76,21 +75,25 @@ trait HtmlAttributesTrait
   }
 
   /**
-   * @param string $key
-   * @param string $default
+   * @param string      $key
+   * @param string|null $default
    *
-   * @return string
+   * @return string|null
    */
   public function getAttribute(string $key, $default = null)
   {
-    return Arrays::value($this->_attributes, $key, $default);
+    $attr = Arrays::value($this->_attributes, $key, $default);
+
+    return is_array($attr)
+      ? implode(' ', $attr)
+      : $attr;
   }
 
   /**
    * Array of attributes for the tag
    *
-   * @param array $attributes
-   * @param bool  $overwriteIfExists
+   * @param array<string, string> $attributes
+   * @param bool                  $overwriteIfExists
    *
    * @return $this
    */
@@ -107,7 +110,7 @@ trait HtmlAttributesTrait
   }
 
   /**
-   * @return array
+   * @return array<string, string>
    */
   public function getAttributes()
   {
@@ -117,7 +120,7 @@ trait HtmlAttributesTrait
   /**
    * Array of attributes for the tag
    *
-   * @param array $attributes
+   * @param array<string, string> $attributes
    *
    * @return $this
    */
@@ -128,7 +131,7 @@ trait HtmlAttributesTrait
   }
 
   /**
-   * @param $key
+   * @param string $key
    *
    * @return bool
    */
@@ -138,7 +141,7 @@ trait HtmlAttributesTrait
   }
 
   /**
-   * @param string ...$class
+   * @param string|string[] ...$class
    *
    * @return $this
    */
@@ -173,6 +176,11 @@ trait HtmlAttributesTrait
     {
       $this->_attributes['class'] = [];
     }
+    else if(is_string($this->_attributes['class']))
+    {
+      $this->_attributes['class'] = explode(' ', $this->_attributes['class']);
+    }
+
     $this->_attributes['class'][$class] = $class;
     return $this;
   }
@@ -188,7 +196,7 @@ trait HtmlAttributesTrait
   }
 
   /**
-   * @param string ...$class
+   * @param string|string[] ...$class
    *
    * @return $this
    */
@@ -214,7 +222,7 @@ trait HtmlAttributesTrait
   /**
    * Toggle a class to the desired state, or the opposite of the current state
    *
-   * @param           $class
+   * @param string    $class
    * @param bool|null $toggle
    *
    * @return $this
@@ -246,6 +254,10 @@ trait HtmlAttributesTrait
    */
   public function getClasses()
   {
-    return (array)Arrays::value($this->_attributes, 'class', []);
+    $attrs = Arrays::value($this->_attributes, 'class', []);
+
+    return (is_string($attrs))
+      ? explode(' ', $attrs)
+      : array_values($attrs);
   }
 }

@@ -3,6 +3,8 @@ namespace Packaged\Ui\Tests\Html;
 
 use Packaged\SafeHtml\SafeHtml;
 use Packaged\Ui\Html\Uri;
+use Packaged\Ui\Tests\Supporting\Html\TestExtendingHtmlElement;
+use Packaged\Ui\Tests\Supporting\Html\TestExtendingUri;
 use Packaged\Ui\Tests\Supporting\Html\TestHtmlElement;
 use PHPUnit\Framework\TestCase;
 
@@ -40,7 +42,7 @@ class HtmlElementTest extends TestCase
     self::assertFalse($tag->hasClass('red'));
     $tag->addClass('red');
     self::assertTrue($tag->hasClass('red'));
-    self::assertEquals(['red' => 'red'], $tag->getClasses());
+    self::assertEquals(['red'], $tag->getClasses());
     $tag->removeClass('red');
     self::assertFalse($tag->hasClass('red'));
 
@@ -76,6 +78,10 @@ class HtmlElementTest extends TestCase
     self::assertFalse($tag->hasClass('toggled'));
   }
 
+  /**
+   * @noinspection HtmlUnknownTarget
+   * @noinspection HtmlRequiredAltAttribute
+   */
   public function testSelfClosers()
   {
     self::assertEquals('<br />', (string)new TestHtmlElement('br'));
@@ -84,6 +90,23 @@ class HtmlElementTest extends TestCase
       '<img src="x.gif" />',
       (string)(new TestHtmlElement('img'))->setAttributes(['src' => 'x.gif'])
     );
+  }
+
+  public function testClasses()
+  {
+    $tag = new TestHtmlElement();
+
+    $tag->addClass('aa');
+    self::assertEquals(['aa'], $tag->getClasses());
+    self::assertEquals('aa', $tag->getAttribute('class'));
+
+    $tag->setAttribute('class', 'xx yy');
+    self::assertEquals(['xx', 'yy'], $tag->getClasses());
+    self::assertEquals('xx yy', $tag->getAttribute('class'));
+
+    $tag->addClass('zz');
+    self::assertEquals(['xx', 'yy', 'zz'], $tag->getClasses());
+    self::assertEquals('xx yy zz', $tag->getAttribute('class'));
   }
 
   public function testNullContent()
@@ -165,7 +188,7 @@ class HtmlElementTest extends TestCase
         $caught = null;
         try
         {
-          (new TestHtmlElement('a'))->setAttributes(['href' => $href], 'go')->produceSafeHTML();
+          (new TestHtmlElement('a'))->setAttributes(['href' => $href])->produceSafeHTML();
         }
         catch(\Exception $ex)
         {
@@ -241,5 +264,14 @@ class HtmlElementTest extends TestCase
     $ele = new TestHtmlElement('');
     $ele->setContent(0);
     self::assertEquals('0', $ele->produceSafeHTML()->getContent());
+  }
+
+  public function testExtending()
+  {
+    $ele = new TestExtendingHtmlElement();
+    self::assertInstanceOf(TestExtendingHtmlElement::class, $ele);
+
+    $ele = new TestExtendingUri('test');
+    self::assertInstanceOf(TestExtendingUri::class, $ele);
   }
 }

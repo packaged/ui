@@ -3,7 +3,7 @@ namespace Packaged\Ui\Html;
 
 use Packaged\Helpers\Arrays;
 use Packaged\Helpers\ValueAs;
-use Packaged\SafeHtml\SafeHtml;
+use Packaged\SafeHtml\SafeHtmlEscape;
 use function http_build_query;
 use function ltrim;
 use function parse_str;
@@ -86,6 +86,9 @@ class Uri
     $this->setFragment(Arrays::value($parts, 'fragment', ''));
   }
 
+  /**
+   * @return string
+   */
   public function __toString()
   {
     $prefix = null;
@@ -96,12 +99,11 @@ class Uri
       $auth = '';
       if(strlen($this->user) && strlen($this->pass))
       {
-        $auth = SafeHtml::escapeUri($this->user) . ':' .
-          SafeHtml::escapeUri($this->pass) . '@';
+        $auth = SafeHtmlEscape::Uri($this->user) . ':' . SafeHtmlEscape::Uri($this->pass) . '@';
       }
       else if(strlen($this->user))
       {
-        $auth = SafeHtml::escapeUri($this->user) . '@';
+        $auth = SafeHtmlEscape::Uri($this->user) . '@';
       }
 
       if($protocol != 'javascript')
@@ -139,22 +141,34 @@ class Uri
     return $prefix . $this->getPath() . $query . $fragment;
   }
 
+  /**
+   * @return string
+   */
   public function getFragment()
   {
     return $this->fragment;
   }
 
+  /**
+   * @return $this
+   */
   public function setFragment($fragment)
   {
     $this->fragment = $fragment;
     return $this;
   }
 
+  /**
+   * @return string
+   */
   public function getPath()
   {
     return $this->path;
   }
 
+  /**
+   * @return $this
+   */
   public function setPath($path)
   {
     if($this->domain && strlen($path) && $path[0] !== '/')
@@ -165,6 +179,9 @@ class Uri
     return $this;
   }
 
+  /**
+   * @return $this
+   */
   public function setQueryParam($key, $value)
   {
     if($value === null)
@@ -178,50 +195,77 @@ class Uri
     return $this;
   }
 
+  /**
+   * @return $this
+   */
   public function setQueryParams(array $params)
   {
     $this->query = $params;
     return $this;
   }
 
+  /**
+   * @return array
+   */
   public function getQueryParams()
   {
     return $this->query;
   }
 
+  /**
+   * @return string
+   */
   public function getProtocol()
   {
     return $this->protocol;
   }
 
+  /**
+   * @return $this
+   */
   public function setProtocol($protocol)
   {
     $this->protocol = $protocol;
     return $this;
   }
 
+  /**
+   * @return string
+   */
   public function getDomain()
   {
     return $this->domain;
   }
 
+  /**
+   * @return $this
+   */
   public function setDomain($domain)
   {
     $this->domain = $domain;
     return $this;
   }
 
+  /**
+   * @return string
+   */
   public function getPort()
   {
     return $this->port;
   }
 
+  /**
+   * @return $this
+   */
   public function setPort($port)
   {
     $this->port = $port;
     return $this;
   }
 
+  /**
+   * @return $this
+   */
   public function appendPath($path)
   {
     $first = strlen($path) ? $path[0] : null;
@@ -244,22 +288,34 @@ class Uri
     return $this;
   }
 
+  /**
+   * @return string
+   */
   public function getUser()
   {
     return $this->user;
   }
 
+  /**
+   * @return $this
+   */
   public function setUser($user)
   {
     $this->user = $user;
     return $this;
   }
 
+  /**
+   * @return string
+   */
   public function getPass()
   {
     return $this->pass;
   }
 
+  /**
+   * @return $this
+   */
   public function setPass($pass)
   {
     $this->pass = $pass;
