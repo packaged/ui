@@ -55,7 +55,7 @@ trait HtmlAttributesTrait
    *
    * @return $this
    */
-  public function setAttribute(string $key, $value, bool $ignoreEmpty = false)
+  public function setAttribute(string $key, $value, $ignoreEmpty = false)
   {
     if($ignoreEmpty && ($value === '' || $value === null))
     {
