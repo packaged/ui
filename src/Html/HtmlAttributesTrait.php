@@ -131,6 +131,8 @@ trait HtmlAttributesTrait
   }
 
   /**
+   * @param string $key
+   *
    * @return bool
    */
   public function hasAttribute(string $key)
@@ -184,6 +186,8 @@ trait HtmlAttributesTrait
   }
 
   /**
+   * @param string $class
+   *
    * @return bool
    */
   public function hasClass(string $class)
@@ -218,6 +222,9 @@ trait HtmlAttributesTrait
   /**
    * Toggle a class to the desired state, or the opposite of the current state
    *
+   * @param string    $class
+   * @param bool|null $toggle
+   *
    * @return $this
    */
   public function toggleClass($class, bool $toggle = null)
@@ -230,6 +237,8 @@ trait HtmlAttributesTrait
   }
 
   /**
+   * @param string $class
+   *
    * @return $this
    */
   private function _removeClass(string $class)
