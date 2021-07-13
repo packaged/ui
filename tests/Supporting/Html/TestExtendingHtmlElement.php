@@ -4,15 +4,17 @@ namespace Packaged\Ui\Tests\Supporting\Html;
 
 use Composer\Autoload\ClassLoader;
 use Packaged\SafeHtml\SafeHtml;
+use Packaged\Ui\Html\HtmlAttributesTrait;
 use Packaged\Ui\Html\HtmlElement;
 use Packaged\Ui\TemplateLoaderTrait;
 
 /**
  * This test is to make sure we don't change the signature of a function that is extended from
  */
-class TestExtendingElement extends HtmlElement
+class TestExtendingHtmlElement extends HtmlElement
 {
   use TemplateLoaderTrait;
+  use HtmlAttributesTrait;
 
   public function render(): string
   {

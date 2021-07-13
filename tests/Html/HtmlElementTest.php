@@ -3,7 +3,7 @@ namespace Packaged\Ui\Tests\Html;
 
 use Packaged\SafeHtml\SafeHtml;
 use Packaged\Ui\Html\Uri;
-use Packaged\Ui\Tests\Supporting\Html\TestExtendingElement;
+use Packaged\Ui\Tests\Supporting\Html\TestExtendingHtmlElement;
 use Packaged\Ui\Tests\Supporting\Html\TestHtmlElement;
 use PHPUnit\Framework\TestCase;
 
@@ -267,7 +267,7 @@ class HtmlElementTest extends TestCase
 
   public function testExtending()
   {
-    $ele = new TestExtendingElement();
-    self::assertInstanceOf(TestExtendingElement::class, $ele);
+    $ele = new TestExtendingHtmlElement();
+    self::assertInstanceOf(TestExtendingHtmlElement::class, $ele);
   }
 }
