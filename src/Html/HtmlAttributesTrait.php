@@ -57,12 +57,18 @@ trait HtmlAttributesTrait
     return $this;
   }
 
-  public function getId(): ?string
+  /**
+   * @return string|null
+   */
+  public function getId()
   {
     return $this->getAttribute('id');
   }
 
-  public function getAttribute(string $key, $default = null): ?string
+  /**
+   * @return string|null
+   */
+  public function getAttribute(string $key, $default = null)
   {
     $attr = Arrays::value($this->_attributes, $key, $default);
 
@@ -88,7 +94,10 @@ trait HtmlAttributesTrait
     return $this;
   }
 
-  public function getAttributes(): array
+  /**
+   * @return array<string, string>
+   */
+  public function getAttributes()
   {
     return $this->_attributes;
   }
@@ -104,7 +113,10 @@ trait HtmlAttributesTrait
     return $this;
   }
 
-  public function hasAttribute(string $key): bool
+  /**
+   * @return bool
+   */
+  public function hasAttribute(string $key)
   {
     return array_key_exists($key, $this->_attributes);
   }
@@ -152,7 +164,10 @@ trait HtmlAttributesTrait
     return $this;
   }
 
-  public function hasClass(string $class): bool
+  /**
+   * @return bool
+   */
+  public function hasClass(string $class)
   {
     return isset($this->_attributes['class'][$class]);
   }
@@ -207,9 +222,9 @@ trait HtmlAttributesTrait
   /**
    * Retrieve all classes set on the element
    *
-   * @return string[]
+   * @return array<string>
    */
-  public function getClasses(): array
+  public function getClasses()
   {
     $attrs = Arrays::value($this->_attributes, 'class', []);
 
