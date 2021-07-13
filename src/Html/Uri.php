@@ -268,7 +268,7 @@ class Uri
   /**
    * @return $this
    */
-  public function appendPath(string $path)
+  public function appendPath($path)
   {
     $first = strlen($path) ? $path[0] : null;
     $last = strlen($this->path) ? $this->path[strlen($this->path) - 1] : null;
@@ -301,7 +301,7 @@ class Uri
   /**
    * @return $this
    */
-  public function setUser(string $user)
+  public function setUser($user)
   {
     $this->user = $user;
     return $this;
@@ -318,7 +318,7 @@ class Uri
   /**
    * @return $this
    */
-  public function setPass(string $pass)
+  public function setPass($pass)
   {
     $this->pass = $pass;
     return $this;
