@@ -9,7 +9,7 @@ class TestTemplatedHtmlElement extends TemplatedHtmlElement
 
   public $extensions = ['phtml'];
 
-  protected function _attemptTemplateExtensions()
+  protected function _attemptTemplateExtensions(): array
   {
     return $this->extensions;
   }
