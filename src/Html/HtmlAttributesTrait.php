@@ -9,6 +9,8 @@ trait HtmlAttributesTrait
   protected $_attributes = [];
 
   /**
+   * @param string $id
+   *
    * @return $this
    */
   public function setId(string $id)
@@ -17,6 +19,9 @@ trait HtmlAttributesTrait
   }
 
   /**
+   * @param string $key
+   * @param        $value
+   *
    * @return $this
    */
   public function setOrRemoveAttribute(string $key, $value)
@@ -33,6 +38,8 @@ trait HtmlAttributesTrait
   }
 
   /**
+   * @param string $key
+   *
    * @return $this
    */
   public function removeAttribute(string $key)
@@ -42,7 +49,9 @@ trait HtmlAttributesTrait
   }
 
   /**
-   * @param bool $ignoreEmpty Do not set attributes where the value is empty string or null
+   * @param string $key
+   * @param        $value
+   * @param bool   $ignoreEmpty Do not set attributes where the value is empty string or null
    *
    * @return $this
    */
@@ -66,6 +75,9 @@ trait HtmlAttributesTrait
   }
 
   /**
+   * @param string      $key
+   * @param string|null $default
+   *
    * @return string|null
    */
   public function getAttribute(string $key, $default = null)
@@ -79,6 +91,9 @@ trait HtmlAttributesTrait
 
   /**
    * Array of attributes for the tag
+   *
+   * @param array<string, string> $attributes
+   * @param bool                  $overwriteIfExists
    *
    * @return $this
    */
@@ -104,6 +119,8 @@ trait HtmlAttributesTrait
 
   /**
    * Array of attributes for the tag
+   *
+   * @param array<string, string> $attributes
    *
    * @return $this
    */
@@ -147,6 +164,8 @@ trait HtmlAttributesTrait
   }
 
   /**
+   * @param string $class
+   *
    * @return $this
    */
   private function _addClass(string $class)
