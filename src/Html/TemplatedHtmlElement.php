@@ -10,9 +10,11 @@ abstract class TemplatedHtmlElement extends HtmlElement
   use TemplateLoaderTrait;
 
   /**
+   * @return SafeHtml
+   *
    * @throws Throwable
    */
-  protected function _getContentForRender(): SafeHtml
+  protected function _getContentForRender()
   {
     return new SafeHtml($this->_renderTemplate());
   }
