@@ -148,22 +148,22 @@ trait TemplateLoaderTrait
     return $this;
   }
 
-  protected function _getTemplatedPhtmlClass(): string
+  protected function _getTemplatedPhtmlClass()
   {
     return static::class;
   }
 
-  protected function _getTemplatedPhtmlClassList(): array
+  protected function _getTemplatedPhtmlClassList()
   {
     return [$this->_getTemplatedPhtmlClass()];
   }
 
-  protected function _attemptTemplateExtensions(): array
+  protected function _attemptTemplateExtensions()
   {
     return ['phtml'];
   }
 
-  protected function _classPathToTemplatePath($classPath): array
+  protected function _classPathToTemplatePath($classPath)
   {
     $return = [];
     $classPath = realpath($classPath);

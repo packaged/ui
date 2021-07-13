@@ -13,7 +13,7 @@ trait HtmlAttributesTrait
    *
    * @return $this
    */
-  public function setId(string $id)
+  public function setId($id)
   {
     return $this->setOrRemoveAttribute('id', $id);
   }
