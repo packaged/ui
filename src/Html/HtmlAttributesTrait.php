@@ -250,7 +250,7 @@ trait HtmlAttributesTrait
   /**
    * Retrieve all classes set on the element
    *
-   * @return array<string>
+   * @return string[]
    */
   public function getClasses()
   {
