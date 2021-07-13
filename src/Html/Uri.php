@@ -4,6 +4,7 @@ namespace Packaged\Ui\Html;
 use Packaged\Helpers\Arrays;
 use Packaged\Helpers\ValueAs;
 use Packaged\SafeHtml\SafeHtml;
+use Packaged\SafeHtml\SafeHtmlEscape;
 use function http_build_query;
 use function ltrim;
 use function parse_str;
@@ -99,13 +100,11 @@ class Uri
       $auth = '';
       if(strlen($this->user) && strlen($this->pass))
       {
-        /** @noinspection PhpUndefinedMethodInspection */
-        $auth = SafeHtml::escapeUri($this->user) . ':' . SafeHtml::escapeUri($this->pass) . '@';
+        $auth = SafeHtmlEscape::Uri($this->user) . ':' . SafeHtmlEscape::Uri($this->pass) . '@';
       }
       else if(strlen($this->user))
       {
-        /** @noinspection PhpUndefinedMethodInspection */
-        $auth = SafeHtml::escapeUri($this->user) . '@';
+        $auth = SafeHtmlEscape::Uri($this->user) . '@';
       }
 
       if($protocol != 'javascript')
