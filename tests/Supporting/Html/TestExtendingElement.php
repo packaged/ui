@@ -2,14 +2,17 @@
 
 namespace Packaged\Ui\Tests\Supporting\Html;
 
+use Composer\Autoload\ClassLoader;
 use Packaged\SafeHtml\SafeHtml;
 use Packaged\Ui\Html\HtmlElement;
+use Packaged\Ui\TemplateLoaderTrait;
 
 /**
  * This test is to make sure we don't change the signature of a function that is extended from
  */
 class TestExtendingElement extends HtmlElement
 {
+  use TemplateLoaderTrait;
 
   public function render(): string
   {
@@ -98,6 +101,43 @@ class TestExtendingElement extends HtmlElement
   }
 
   public function getClasses()
+  {
+  }
+
+  protected function _disableClassLoader()
+  {
+  }
+
+  protected function _renderTemplate(): string
+  {
+    return '';
+  }
+
+  protected function _getTemplateFilePath()
+  {
+  }
+
+  protected function _getClassLoader()
+  {
+  }
+
+  protected function _setClassLoader(ClassLoader $loader, bool $global = true)
+  {
+  }
+
+  protected function _getTemplatedPhtmlClass()
+  {
+  }
+
+  protected function _getTemplatedPhtmlClassList()
+  {
+  }
+
+  protected function _attemptTemplateExtensions()
+  {
+  }
+
+  protected function _classPathToTemplatePath($classPath)
   {
   }
 }
