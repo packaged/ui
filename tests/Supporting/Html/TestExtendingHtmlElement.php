@@ -98,7 +98,7 @@ class TestExtendingHtmlElement extends HtmlElement
   {
   }
 
-  public function toggleClass($class, bool $toggle = null)
+  public function toggleClass($class, ?bool $toggle = null)
   {
   }
 
